@@ -54,27 +54,11 @@ func task2(lines []string) int {
 			if c >= 48 && c <= 57 {
 				d = c - 48
 			}
-			switch {
-			case i+4 <= l && line[i:i+4] == "zero":
-				d = 0
-			case i+3 <= l && line[i:i+3] == "one":
-				d = 1
-			case i+3 <= l && line[i:i+3] == "two":
-				d = 2
-			case i+5 <= l && line[i:i+5] == "three":
-				d = 3
-			case i+4 <= l && line[i:i+4] == "four":
-				d = 4
-			case i+4 <= l && line[i:i+4] == "five":
-				d = 5
-			case i+3 <= l && line[i:i+3] == "six":
-				d = 6
-			case i+5 <= l && line[i:i+5] == "seven":
-				d = 7
-			case i+5 <= l && line[i:i+5] == "eight":
-				d = 8
-			case i+4 <= l && line[i:i+4] == "nine":
-				d = 9
+			digits := []string{"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}
+			for j, digit := range digits {
+				if i+len(digit) <= l && line[i:i+len(digit)] == digit {
+					d = j + 1
+				}
 			}
 			if d >= 0 {
 				if firstDigit < 0 {
