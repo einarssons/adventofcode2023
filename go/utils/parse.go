@@ -43,6 +43,27 @@ func ContainsInt(x int, entries []int) bool {
 	return false
 }
 
+// Trim just trims space.
+func Trim(line string) string {
+	return strings.TrimSpace(line)
+}
+
+func SplitWithTrim(line, splitPattern string) []string {
+	if splitPattern == "" || splitPattern == " " {
+		panic("splitPattern cannot be empty or space")
+	}
+	parts := strings.Split(line, splitPattern)
+	for i, p := range parts {
+		parts[i] = Trim(p)
+	}
+	return parts
+}
+
+// SplitWithSpace splits a line with space as separator.
+func SplitWithSpace(line string) []string {
+	return strings.Split(line, " ")
+}
+
 func CountInts(entries []int) map[int]int {
 	m := make(map[int]int)
 	for _, n := range entries {
