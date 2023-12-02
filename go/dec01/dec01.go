@@ -27,14 +27,11 @@ func task1(lines []string) int {
 			d := -1
 			if c >= 48 && c <= 57 {
 				d = c - 48
-			}
-			if d >= 0 {
 				if firstDigit < 0 {
 					firstDigit = d
 				}
 				lastDigit = d
 			}
-
 		}
 		nr := firstDigit*10 + lastDigit
 		sum += nr
