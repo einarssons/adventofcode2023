@@ -10,11 +10,11 @@ import (
 func TestTask1(t *testing.T) {
 	lines := u.ReadLinesFromFile("testinput")
 	result := task1(lines)
-	require.Equal(t, 0, result)
+	require.Equal(t, 35, result)
 }
 
 func TestTask2(t *testing.T) {
 	lines := u.ReadLinesFromFile("testinput")
 	result := task2(lines)
-	require.Equal(t, 0, result)
+	require.Equal(t, 46, result)
 }
