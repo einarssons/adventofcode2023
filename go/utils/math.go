@@ -1,5 +1,7 @@
 package utils
 
+import "fmt"
+
 const (
 	MaxInt = 9223372036854775807
 )
@@ -73,10 +75,62 @@ func Triangle(nr int) int {
 	return nr * (nr + 1) / 2
 }
 
-// GCDuint64 - greatest common divisor (GCD) via Euclidean algorithm
+// GCD - greatest common divisor (GCD) via Euclidean algorithm
 func GCD(a, b int) int {
 	for b != 0 {
 		b, a = a%b, b
 	}
 	return a
+}
+
+// LCM - least common multiple (LCM) via GCD
+func LCM(values []int) int {
+	result := values[0]
+	for i := 1; i < len(values); i++ {
+		result = result * values[i] / GCD(result, values[i])
+	}
+	return result
+}
+
+// Cycle is a struct that represents a cycle with an offset and a period.
+type Cycle struct {
+	Offset, Period int
+}
+
+// CRT is a function that takes a slice of cycles and returns the smallest
+// number that satisfies all the cycles according to the Chinese Remainder Theorem.
+func CRT(cycles []Cycle) int {
+	n := 1
+	for _, c := range cycles {
+		d := GCD(n, c.Period)
+		n *= c.Period / d
+	}
+
+	for i := 0; i < len(cycles); i++ {
+		term := 0
+		prod := 1
+		for j := 0; j < len(cycles); j++ {
+			if i != j {
+				prod *= cycles[j].Period
+			}
+		}
+		found := false
+		for k := 1; k < cycles[i].Period; k++ {
+			if cycles[i].Offset == 0 {
+				found = true
+				break
+			}
+			term = k * prod
+			if term%cycles[i].Period == cycles[i].Offset {
+				found = true
+				break
+			}
+		}
+		if !found {
+			fmt.Println("no extra sum found for cycle", i)
+			return -1
+		}
+		n += term
+	}
+	return n
 }
