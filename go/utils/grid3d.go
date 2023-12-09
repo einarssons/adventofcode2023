@@ -7,13 +7,13 @@ type Grid3D[K any] struct {
 }
 
 var NeighborsStraight = [][3]int{{-1, 0, 0}, {1, 0, 0}, {0, -1, 0}, {0, 1, 0}, {0, 0, -1}, {0, 0, 1}}
-var NeigborsAll [][3]int
+var NeighborsAll [][3]int
 
 func init() {
 	for x := -1; x <= 1; x += 2 {
 		for y := -1; y <= 1; y += 2 {
 			for z := -1; z <= 1; z += 2 {
-				NeigborsAll = append(NeigborsAll, [3]int{x, y, z})
+				NeighborsAll = append(NeighborsAll, [3]int{x, y, z})
 			}
 		}
 	}

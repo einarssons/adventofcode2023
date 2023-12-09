@@ -5,13 +5,13 @@ import (
 	"strings"
 )
 
-type Grid2D[T any] struct {
+type Grid2D[T comparable] struct {
 	Grid   [][]T
 	Width  int
 	Height int
 }
 
-func CreateGrid2D[T any](width, height int) Grid2D[T] {
+func CreateGrid2D[T comparable](width, height int) Grid2D[T] {
 	grid := Grid2D[T]{
 		Grid:   make([][]T, 0, height),
 		Width:  width,
@@ -23,16 +23,43 @@ func CreateGrid2D[T any](width, height int) Grid2D[T] {
 	return grid
 }
 
+// InBounds checks if (row, col) inside grid
 func (g Grid2D[T]) InBounds(row, col int) bool {
 	return 0 <= row && row < g.Height && 0 <= col && col < g.Width
 }
 
-func (g Grid2D[T]) SetValue(value T) {
+// AtBorder checks if (row, col) is at the border of the grid
+func (g Grid2D[T]) AtBorder(row, col int) bool {
+	return row == 0 || row == g.Height-1 || col == 0 || col == g.Width-1
+}
+
+// SetAll sets all cells in the grid to the given value
+func (g *Grid2D[T]) SetAll(value T) {
 	for row := 0; row < g.Height; row++ {
 		for col := 0; col < g.Width; col++ {
 			g.Grid[row][col] = value
 		}
 	}
+}
+
+func (g *Grid2D[T]) Find(value T) (row, col int, ok bool) {
+	for r := 0; r < g.Height; r++ {
+		for c := 0; c < g.Width; c++ {
+			if g.Grid[r][c] == value {
+				return r, c, true
+			}
+		}
+	}
+	return -1, -1, false
+}
+
+// Set sets an individual cell in the grid
+func (g *Grid2D[T]) Set(val T, row, col int) {
+	g.Grid[row][col] = val
+}
+
+func (g Grid2D[T]) Get(row, col int) T {
+	return g.Grid[row][col]
 }
 
 type DigitGrid struct {
@@ -99,7 +126,7 @@ func CreateEmptyCharGrid(width, height int) CharGrid {
 	return grid
 }
 
-func (g CharGrid) SetValue(value string) {
+func (g *CharGrid) SetAll(value string) {
 	for y := 0; y < g.Height; y++ {
 		for x := 0; x < g.Width; x++ {
 			g.Grid[y][x] = value
@@ -149,28 +176,10 @@ func (g DigitGrid) InBounds(y, x int) bool {
 	return 0 <= y && y < g.Height && 0 <= x && x < g.Width
 }
 
-func (g DigitGrid) SetValue(value int) {
+func (g *DigitGrid) SetAll(value int) {
 	for y := 0; y < g.Height; y++ {
 		for x := 0; x < g.Width; x++ {
 			g.Grid[y][x] = value
 		}
 	}
-}
-
-type BoolGrid struct {
-	Grid   [][]bool
-	Width  int
-	Height int
-}
-
-func CreateBoolGrid(width, height int) BoolGrid {
-	grid := BoolGrid{
-		Grid:   make([][]bool, 0, height),
-		Width:  width,
-		Height: height}
-
-	for i := 0; i < grid.Height; i++ {
-		grid.Grid = append(grid.Grid, make([]bool, grid.Width))
-	}
-	return grid
 }
