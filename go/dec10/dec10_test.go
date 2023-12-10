@@ -14,7 +14,7 @@ func TestTask1(t *testing.T) {
 }
 
 func TestTask2(t *testing.T) {
-	lines := u.ReadLinesFromFile("testinput")
+	lines := u.ReadLinesFromFile("testinput3")
 	result := task2(lines)
-	require.Equal(t, 0, result)
+	require.Equal(t, 8, result)
 }
