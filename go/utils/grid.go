@@ -151,7 +151,7 @@ func (g CharGrid) String() string {
 		row := strings.Join(g.Grid[r], "")
 		rows = append(rows, row)
 	}
-	return strings.Join(rows, "\n")
+	return "\n" + strings.Join(rows, "\n") + "\n"
 }
 
 // InBounds - is (y, x) in grid
@@ -182,4 +182,59 @@ func (g *DigitGrid) SetAll(value int) {
 			g.Grid[y][x] = value
 		}
 	}
+}
+
+type RuneGrid struct {
+	Grid   [][]rune
+	Width  int
+	Height int
+}
+
+func CreateRuneGridFromLines(lines []string) RuneGrid {
+	g := RuneGrid{}
+	for i, line := range lines {
+		if i == 0 {
+			g.Width = len(line)
+		}
+		if len(line) != g.Width {
+			panic("non-rectangular grid")
+		}
+		row := SplitToRunes(line)
+		g.Grid = append(g.Grid, row)
+		g.Height++
+	}
+	return g
+}
+
+func (g *RuneGrid) SetAll(value rune) {
+	for r := 0; r < g.Height; r++ {
+		for c := 0; c < g.Width; c++ {
+			g.Grid[r][c] = value
+		}
+	}
+}
+
+func (g *RuneGrid) Find(x rune) (row, col int) {
+	for r := 0; r < g.Height; r++ {
+		for c := 0; c < g.Width; c++ {
+			if g.Grid[r][c] == x {
+				return r, c
+			}
+		}
+	}
+	return -1, -1
+}
+
+func (g RuneGrid) String() string {
+	var rows []string
+	for r := 0; r < g.Height; r++ {
+		row := string(g.Grid[r])
+		rows = append(rows, row)
+	}
+	return "\n" + strings.Join(rows, "\n") + "\n"
+}
+
+// InBounds - is (row, col) in grid
+func (g RuneGrid) InBounds(r, c int) bool {
+	return 0 <= r && r < g.Height && 0 <= c && c < g.Width
 }

@@ -34,6 +34,15 @@ func SplitToChars(line string) []string {
 	return chars
 }
 
+// SplitToRunes splits a line into runes.
+func SplitToRunes(line string) []rune {
+	runes := make([]rune, 0, len(line))
+	for i := 0; i < len(line); i++ {
+		runes = append(runes, rune(line[i]))
+	}
+	return runes
+}
+
 func ContainsInt(x int, entries []int) bool {
 	for _, n := range entries {
 		if x == n {
