@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -90,6 +91,18 @@ func CreateDigitGridFromLines(lines []string) DigitGrid {
 		g.Height++
 	}
 	return g
+}
+
+func (g *DigitGrid) String() string {
+	var rows []string
+	for r := 0; r < g.Height; r++ {
+		row := ""
+		for c := 0; c < g.Width; c++ {
+			row += fmt.Sprintf("%x", g.Grid[r][c])
+		}
+		rows = append(rows, row)
+	}
+	return "\n" + strings.Join(rows, "\n") + "\n"
 }
 
 type CharGrid struct {
