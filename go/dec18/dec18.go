@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"strconv"
 
 	u "github.com/einarssons/adventofcode2023/go/utils"
 )
@@ -46,6 +47,51 @@ func task1(lines []string) int {
 	nrExterior := h.markExterior(minRow, maxRow, minCol, maxCol)
 	volume := (maxRow-minRow+1)*(maxCol-minCol+1) - nrExterior
 	return volume
+}
+
+func task2(lines []string) int {
+	steps := parse2(lines)
+	pos := Pos2D{0, 0}
+	startPos := pos
+	corners := make([]Pos2D, 0, len(steps))
+	corners = append(corners, pos)
+	closed := false
+	edgeLen := 0
+	for i, s := range steps {
+		var dir Pos2D
+		switch s.dir {
+		case "R":
+			dir = Pos2D{0, 1}
+		case "L":
+			dir = Pos2D{0, -1}
+		case "U":
+			dir = Pos2D{-1, 0}
+		case "D":
+			dir = Pos2D{1, 0}
+		}
+		edgeLen += s.steps
+		pos = pos.add(dir.mul(s.steps))
+		if closed {
+			panic(fmt.Sprintf("closed but step=%d (%d)", i, len(steps)))
+		}
+		if pos == startPos {
+			closed = true
+			fmt.Println("back to start")
+			continue
+		}
+		corners = append(corners, pos)
+	}
+	area := shoelace(corners) + edgeLen/2 + 1
+	return area
+}
+
+func shoelace(corners []Pos2D) int {
+	area := 0
+	for i := 0; i < len(corners)-1; i++ {
+		iplus := (i + 1) % len(corners)
+		area += (corners[i].row + corners[iplus].row) * (corners[i].col - corners[iplus].col)
+	}
+	return u.Abs(area) / 2
 }
 
 type step struct {
@@ -248,6 +294,30 @@ func parse(lines []string) []step {
 	return steps
 }
 
-func task2(lines []string) int {
-	return 0
+func parse2(lines []string) []step {
+	steps := make([]step, 0, len(lines))
+	for _, line := range lines {
+		ll := len(line)
+		d := line[ll-2 : ll-1]
+		var dir string
+		switch d {
+		case "0":
+			dir = "R"
+		case "1":
+			dir = "D"
+		case "2":
+			dir = "L"
+		case "3":
+			dir = "U"
+		default:
+			panic("Unknown direction")
+		}
+		hexDigits := line[ll-7 : ll-2]
+		s, err := strconv.ParseInt(hexDigits, 16, 64)
+		if err != nil {
+			panic(err)
+		}
+		steps = append(steps, step{dir, int(s), ""})
+	}
+	return steps
 }

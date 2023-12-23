@@ -54,6 +54,10 @@ func (g *Grid2D[T]) Find(value T) (row, col int, ok bool) {
 	return -1, -1, false
 }
 
+func (g *Grid2D[T]) At(row, col int) T {
+	return g.Grid[row][col]
+}
+
 // Set sets an individual cell in the grid
 func (g *Grid2D[T]) Set(val T, row, col int) {
 	g.Grid[row][col] = val
@@ -250,4 +254,22 @@ func (g RuneGrid) String() string {
 // InBounds - is (row, col) in grid
 func (g RuneGrid) InBounds(r, c int) bool {
 	return 0 <= r && r < g.Height && 0 <= c && c < g.Width
+}
+
+func (g RuneGrid) At(r, c int) rune {
+	return g.Grid[r][c]
+}
+
+func (g RuneGrid) Copy() RuneGrid {
+	n := RuneGrid{
+		Grid:   make([][]rune, 0, g.Height),
+		Width:  g.Width,
+		Height: g.Height,
+	}
+	for r := 0; r < g.Height; r++ {
+		row := make([]rune, g.Width)
+		copy(row, g.Grid[r])
+		n.Grid = append(n.Grid, row)
+	}
+	return n
 }
