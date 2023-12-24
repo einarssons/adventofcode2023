@@ -126,6 +126,7 @@ func FirstAsciiNr(s string) int {
 
 // Atoi is panicing version of strconv.Atoi. Panics instead of error.
 func Atoi(s string) int {
+	s = strings.TrimSpace(s)
 	nr, err := strconv.Atoi(s)
 	if err != nil {
 		panic(fmt.Sprintf("cannot convert %s to int", s))
