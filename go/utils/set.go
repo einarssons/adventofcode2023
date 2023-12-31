@@ -16,6 +16,14 @@ func (s Set[K]) Contains(elem K) bool {
 	return ok
 }
 
+func (s Set[K]) Clone() Set[K] {
+	m := make(map[K]struct{})
+	for k := range s {
+		m[k] = struct{}{}
+	}
+	return Set[K](m)
+}
+
 // Add - add elem to set
 func (s Set[K]) Add(elem K) {
 	s[elem] = struct{}{}
@@ -69,4 +77,11 @@ func (s Set[K]) Intersect(other Set[K]) {
 	for _, k := range deleteList {
 		delete(s, k)
 	}
+}
+
+func (s Set[K]) GetOne() K {
+	for k := range s {
+		return k
+	}
+	panic("empty set")
 }
